@@ -58,6 +58,8 @@ write("Loader")
 	install("middleclass")
 write("ok\n")
 
--- install more files here
+write("Modules")
+    install("CCore")
+erit("ok\n")
 
 write("Finished installation...\n")

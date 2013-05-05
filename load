@@ -1,2 +1,6 @@
---load class api
-shell.run(Cauldron.libDirectory("middleclass"))
+local _cauldron_load = function(name)
+    shell.run(Cauldron.libDirectory(name))
+end
+
+_cauldron_load("middleclass")
+_cauldron_load("CCore/CCore")

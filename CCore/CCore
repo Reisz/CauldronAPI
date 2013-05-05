@@ -1,0 +1,5 @@
+local _ccore_load = function(name)
+    shell.run(Cauldron.libDirectory("CCore/") .. name)
+end
+
+_ccore_load("CObject")
