@@ -1,0 +1,52 @@
+CObject = class("CObject")
+local _private = setmetatable({}, {__mode = "k"})
+
+local _tableFind = function(tbl, value)
+    for i, v in pairs(tbl) do
+        if v == value then return i end
+    end
+end
+
+local _tableRemove = function(tbl, value)
+    table.remove(tbl, _tableFind(tbl, value))
+end
+
+function CObject:initialize(parent)
+    assert(instanceOf(CObject, parent) or parent == nil, "parent must be CObject or nil")
+    
+    _private[self] = {
+        parent = parent,
+        children = {}
+    }
+    
+    if parent then
+        table.insert(_private[parent].children, self) -- backref from parent
+    end
+end
+
+function CObject:children()
+    local tbl = {} -- don't give the real pointer away
+    for i,v in pairs(_private[self].children) do
+        tbl[i] = v
+    end
+    
+    return tbl
+end
+
+function CObject:parent()
+    return _private[self].parent
+end
+
+function CObject:setParent(parent)
+    assert(instanceOf(CObject, parent) or parent == nil, "parent must be CObject or nil")
+    
+    if _private[self].parent then
+        _tableRemove(_private[_private[self].parent].children, parent)
+    end
+    
+    _private[self].parent = parent
+    
+    if parent then
+        table.insert(_private[parent].children, self) -- backref from parent
+    end
+end
