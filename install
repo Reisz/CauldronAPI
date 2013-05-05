@@ -1,10 +1,12 @@
+local args = {...}
 local version = -1 -- prerelease
 local thisProgram = shell.getRunningProgram()
 local source, dir = string.sub(thisProgram, 1, #thisProgram - #string.match(thisProgram, "/[^/]+$") + 1)
 
-local installFile = function(name)
+local install = function(name)
 	if fs.exists(dir .. name) then fs.delete(dir .. name) end
 	fs.copy(source .. name, dir .. name)
+    write(".")
 end
 
 -- prepare terminal
@@ -14,14 +16,22 @@ term.clear()
 
 -- get install directory
 shell.setDir("")
-write("\nChoose an install path\n> ")
-dir = shell.resolve(io.read())
-term.clear()
-while not dir do
-    write("Invalid Path!\nChoose an install path\n> ")
-    dir = shell.resolve(io.read()) -- TODO: replace with advanced version (standard value)
-    term.clear()
+
+if type(args[1]) == "string" then
+    dir = shell.resolve(io.read())
 end
+
+if not dir then
+    write("\nChoose an install path\n> ")
+    dir = shell.resolve(io.read())
+    term.clear()
+    while not dir do
+        write("Invalid Path!\nChoose an install path\n> ")
+        dir = shell.resolve(io.read()) -- TODO: replace with advanced version (standard value)
+        term.clear()
+    end
+end
+
 
 write("Starting setup...\n\n")
 fs.makeDir(dir)
@@ -43,9 +53,9 @@ write("Cauldron... ")
     fileC.close()
 write("ok\n")
 
-write("Loader... ")
-	installFile("load")
-	installFile("middleclass")
+write("Loader")
+	install("load")
+	install("middleclass")
 write("ok\n")
 
 -- install more files here
