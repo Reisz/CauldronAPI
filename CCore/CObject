@@ -16,7 +16,8 @@ function CObject:initialize(parent)
     
     _private[self] = {
         parent = parent,
-        children = {}
+        children = {},
+        name = ""
     }
     
     if parent then
@@ -33,8 +34,16 @@ function CObject:children()
     return tbl
 end
 
+function CObject:objectName()
+    return _private[self].name
+end
+
 function CObject:parent()
     return _private[self].parent
+end
+
+function CObject:setObjectName(name)
+    _private[self].name = name
 end
 
 function CObject:setParent(parent)
