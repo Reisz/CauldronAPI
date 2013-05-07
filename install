@@ -17,8 +17,8 @@ term.clear()
 -- get install directory
 shell.setDir("")
 
-if type(args[1]) == "string" then
-    dir = shell.resolve(io.read())
+if args[1] then
+    dir = shell.resolve(args[1])
 end
 
 if not dir then
@@ -60,6 +60,6 @@ write("ok\n")
 
 write("Modules")
     install("CCore")
-erit("ok\n")
+write("ok\n")
 
 write("Finished installation...\n")
