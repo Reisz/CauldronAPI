@@ -12,7 +12,6 @@ end
 -- prepare terminal
 term.setTextColor(colors.white)
 term.setBackgroundColor(colors.black)
-term.clear()
 
 -- get install directory
 shell.setDir("")
@@ -22,13 +21,15 @@ if args[1] then
 end
 
 if not dir then
+    term.clear()
+    term.setCursorPos(1,1)
     write("\nChoose an install path\n> ")
     dir = shell.resolve(io.read())
-    term.clear()
     while not dir do
+        term.clear()
+        term.setCursorPos(1,1)
         write("Invalid Path!\nChoose an install path\n> ")
         dir = shell.resolve(io.read()) -- TODO: replace with advanced version (standard value)
-        term.clear()
     end
 end
 
@@ -37,7 +38,7 @@ write("Starting setup...\n\n")
 fs.makeDir(dir)
 if not string.find(dir, "/$") then dir = dir .. "/" end
 
-write("Cauldron... ")
+write("Cauldron")
     local fileC = fs.open("Cauldron", "w")
 
     if not fileC then
@@ -51,15 +52,15 @@ write("Cauldron... ")
                 'function Cauldron.libDirectory(sub) return "' .. dir .. '" .. sub end\n\n' ..
                 'shell.run("' .. dir .. 'load")\n')
     fileC.close()
-write("ok\n")
+write(" ok\n")
 
 write("Loader")
 	install("load")
 	install("middleclass")
-write("ok\n")
+write(" ok\n")
 
 write("Modules")
     install("CCore")
-write("ok\n")
+write(" ok\n")
 
-write("Finished installation...\n")
+write("\nFinished installation...\n")
