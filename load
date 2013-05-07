@@ -2,5 +2,19 @@ local _cauldron_load = function(name)
     shell.run(Cauldron.libDirectory(name))
 end
 
+Cauldron._include = setmetatable({}, {
+    __index = function(_, key)
+        return key
+    end,
+    __newindex = false
+})
+
+function Cauldron.use(name)
+    _cauldron_load(Cauldron._include[name])
+end
+
+function Cauldron.loadModule(name)
+    _cauldron_load(name .. "/" .. name)
+end
+
 _cauldron_load("middleclass")
-_cauldron_load("CCore/CCore")
