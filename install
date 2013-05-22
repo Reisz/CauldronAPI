@@ -3,10 +3,40 @@ local version = -1 -- prerelease
 local thisProgram = shell.getRunningProgram()
 local source, dir = string.sub(thisProgram, 1, #thisProgram - #string.match(thisProgram, "/[^/]+$") + 1)
 
-local install = function(name)
+local function install(name)
 	if fs.exists(dir .. name) then fs.delete(dir .. name) end
 	fs.copy(source .. name, dir .. name)
     write(".")
+end
+
+local function advancedInput(message, default)
+    if type(default) ~= "string" then
+        default = ""
+    end
+
+    local _, y = term.getCursorPos()
+    term.clearLine()
+    term.setCursorPos(1, y)
+    term.write(message)
+    
+    local input = default
+    while true do
+        term.clearLine()
+        term.setCursorPos(1, y)
+        term.write(message)
+        term.write(input)
+
+        local e, p = os.pullEvent()
+        if e == "char" then
+            input = input .. p
+        elseif e == "key" then
+            if p == 14 then -- backspace
+                input = string.sub(input, 1, #input - 1)
+            elseif p == 28 then -- enter
+                return input
+            end
+        end
+    end
 end
 
 -- prepare terminal
@@ -23,14 +53,14 @@ end
 if not dir then
     term.clear()
     term.setCursorPos(1,1)
-    write("\nChoose an install path\n> ")
-    dir = shell.resolve(io.read())
+    dir = shell.resolve(advancedInput("Choose an install path > ", "CLibs"))
     while not dir do
         term.clear()
         term.setCursorPos(1,1)
-        write("Invalid Path!\nChoose an install path\n> ")
-        dir = shell.resolve(io.read()) -- TODO: replace with advanced version (standard value)
+        write("Invalid Path!\n")
+        dir = shell.resolve(advancedInput("Choose an install path > ", "CLibs"))
     end
+    write("\n")
 end
 
 
