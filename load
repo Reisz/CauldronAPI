@@ -1,20 +1,26 @@
-local _cauldron_load = function(name)
+local function _load(name)
     shell.run(Cauldron.libDirectory(name))
 end
 
-Cauldron._include = setmetatable({}, {
-    __index = function(_, key)
-        return key
-    end,
-    __newindex = false
-})
-
-function Cauldron.use(name)
-    _cauldron_load(Cauldron._include[name])
+local function _scan(dir)
+    dir = dir .. "/"
+    local files = fs.list(dir)
+    for _, v in ipairs(files) do
+        if fs.isDir(dir .. v) then
+            _scan(dir .. v)
+        else
+            shell.run(dir .. v)
+        end
+    end
 end
+
+Cauldron._loaded = {}
 
 function Cauldron.loadModule(name)
-    _cauldron_load(name .. "/" .. name)
+    if Cauldron._loaded[name] then return end
+    _scan(Cauldron.libDirectory("") .. name)
+    Cauldron._loaded[name] = true
 end
 
-_cauldron_load("middleclass")
+_load("middleclass")
+Cauldron.loadModule("CCore")
