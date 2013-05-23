@@ -83,7 +83,6 @@ write("Cauldron")
 write(" ok\n")
 
 write("Loader")
-	install("load")
 	install("middleclass")
 write(" ok\n")
 
