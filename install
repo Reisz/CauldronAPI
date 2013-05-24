@@ -51,14 +51,12 @@ if args[1] then
 end
 
 if not dir then
-    term.clear()
-    term.setCursorPos(1,1)
-    dir = shell.resolve(advancedInput("Choose an install path > ", "CLibs"))
-    while not dir do
-        term.clear()
-        term.setCursorPos(1,1)
-        write("Invalid Path!\n")
-        dir = shell.resolve(advancedInput("Choose an install path > ", "CLibs"))
+    local input = advancedInput("Choose an install path > ", "CLibs")
+    dir = shell.resolve(input)
+    while input ~= dir or dir == "Cauldron" do
+        write("\nInvalid Path!\n")
+        input = advancedInput("Choose an install path > ", "CLibs")
+        dir = shell.resolve(input)
     end
     write("\n")
 end
