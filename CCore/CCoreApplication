@@ -1,12 +1,12 @@
 CCoreApplication = class("CCoreApplication", QObject)
-local _args
+local _arguments, _instance
 local _applicationName, _applicationVersion
 local _organizationName, _organizationDomain
 local _applicationFilePath, _applicationDirPath
 
 function CCoreApplication:initialize(...)
-    _args = {...}
-    
+    _arguments = {...}
+    _instance = self
     _applicationFilePath = shell.getRunningProgram()
 	_applicationName = string.match(_applicationFilePath, "[^/]+$")
     if not _applicationName then _applicationName = _applicationFilePath end
@@ -28,3 +28,14 @@ function CCoreApplication.static.setOrganizationDomain(domain) _organizationDoma
 
 function CCoreApplication.static.applicationDirPath() return _applicationDirPath end
 function CCoreApplication.static.applicationFilePath() return _applicationFilePath end
+
+function CCoreApplication.static.arguments()
+    local tbl = {} -- don't give the real pointer away
+    for i,v in pairs(_arguments) do
+        tbl[i] = v
+    end
+    
+    return tbl
+ end
+ 
+ function CCoreApplication.static.instance() return _instance end
