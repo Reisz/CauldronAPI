@@ -1,0 +1,3 @@
+shell.run("Cauldron")
+term.setTextColor(colors.lightGray)
+print(Cauldron, " loaded")

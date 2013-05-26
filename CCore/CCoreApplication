@@ -38,4 +38,4 @@ function CCoreApplication.static.arguments()
     return tbl
  end
  
- function CCoreApplication.static.instance() return _instance end
+function CCoreApplication.static.instance() return _instance end

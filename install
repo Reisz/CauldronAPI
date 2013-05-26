@@ -1,5 +1,5 @@
 local args = {...}
-local version, vstring = -1, "pre-alpha"
+local version, vstring = -1, "PreAlpha"
 local thisProgram = shell.getRunningProgram()
 local source, dir = string.sub(thisProgram, 1, #thisProgram - #string.match(thisProgram, "/[^/]+$") + 1)
 
@@ -82,6 +82,10 @@ write(" ok\n")
 
 write("Loader")
 	install("middleclass")
+    --install startup
+	if fs.exists("startup") then fs.delete("startup") end
+    fs.copy(source .. "start", "startup")
+    write(".")
 write(" ok\n")
 
 write("Modules")
