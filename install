@@ -2,6 +2,36 @@ local args = {...}
 local version, vstring = -1, "PreAlpha"
 local thisProgram = shell.getRunningProgram()
 local source, dir = string.sub(thisProgram, 1, #thisProgram - #string.match(thisProgram, "/[^/]+$") + 1)
+local startup
+
+if args[1] == "-h" or args[1] == "--help" then
+    print("Usage: install [OPTIONS]")
+    print("OPTIONS: -s <y/n> or --startup <yes/no>")
+    print("            Install startup script (Default: yes)")
+    print("         -d DIR or --direcoty DIR")
+    print("            Use DIR as target directory.")
+    return
+end
+
+shell.setDir("")
+
+while #args > 0 do
+    if args[1] == "-s" or args[1] == "--startup" then
+        table.remove(args, 1)
+        if args[1] == "n" or args[1] == "N" or args[1] == "no" then
+            startup = false
+        else
+            startup = true
+        end
+    elseif args[1] == "-d" or args[1] == "--directory" then
+        table.remove(args, 1)
+        local input = args[1]
+        if #input == 0 then input = "CLibs" end
+        dir = shell.resolve(input)
+        if input ~= dir or dir == "Cauldron" then dir = nil end
+    end
+    table.remove(args, 1)
+end
 
 local function install(name)
 	if fs.exists(dir .. name) then fs.delete(dir .. name) end
@@ -43,24 +73,25 @@ end
 term.setTextColor(colors.white)
 term.setBackgroundColor(colors.black)
 
--- get install directory
-shell.setDir("")
-
-if args[1] then
-    dir = shell.resolve(args[1])
-end
-
 if not dir then
     local input = advancedInput("Choose an install path > ", "CLibs")
+    if #input  == 0 then input = "CLibs" write("CLibs") end
     dir = shell.resolve(input)
     while input ~= dir or dir == "Cauldron" do
         write("\nInvalid Path!\n")
         input = advancedInput("Choose an install path > ", "CLibs")
+        if #input  == 0 then input = "CLibs" write("CLibs") end
         dir = shell.resolve(input)
     end
     write("\n")
 end
 
+if startup == nil then
+    local ans = advancedInput("Install the startup script <Y/n> ")
+    if ans == "n" or ans == "N" then
+        startup = false
+    end
+end
 
 write("Starting setup...\n\n")
 fs.makeDir(dir)
@@ -82,14 +113,15 @@ write(" ok\n")
 
 write("Loader")
 	install("middleclass")
-    --install startup
-	if fs.exists("startup") then fs.delete("startup") end
-    fs.copy(source .. "start", "startup")
-    write(".")
+    if startup then
+        if fs.exists("startup") then fs.delete("startup") end
+        fs.copy(source .. "start", "startup")
+        write(".")
+    end
 write(" ok\n")
 
 write("Modules")
     install("CCore")
 write(" ok\n")
 
-write("\nFinished installation...\n")
+write("\nFinished installation!\n")
