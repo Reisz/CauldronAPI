@@ -1,0 +1,46 @@
+CList = class("CList")
+local _private = setmetatable({}, {__mode = "k"})
+
+function CList:initialize(...)
+    _private[self] = {...}
+end
+
+function CList:copy(other)
+    return CList(unpack(_private[self]))
+end
+
+function CList:toTable()
+    return _private[self]
+end
+
+function CList:concat(sep, i, j)
+    sep = sep or ""
+    i = i or 1
+    j = j or #_private[self]
+    return table.concat(_private[self], sep, i, j)
+end
+
+function CList:insert(pos, value)
+    if value == nil then
+        value = pos
+        pos = #_private[self] + 1
+    end
+    return table.insert(_private[self], pos, value)
+end
+
+function CList:maxn()
+    return table.maxn(_private[self])
+end
+
+function CList:remove(pos)
+    pos = pos or #_private[self]
+    return table.remove(_private[self], pos)
+end
+
+function CList:sort(comp)
+    return table.sort(_private[self], comp)
+end
+
+function CList:dump()
+    for i, v in ipairs(_private[self]) do print("[", i, "] = ", v) end
+end
