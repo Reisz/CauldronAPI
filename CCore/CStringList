@@ -23,23 +23,23 @@ end
 function CStringList:insert(pos, value)
     if value == nil then
         value = pos
-        pos = #_private[self] + 1
+        pos = self:length() + 1
     end
     return CList.insert(self, pos, tostring(value))
 end
 
 function CStringList:find(value, plain)
-    if plain then retrun CList.find(self, value) end
-    for i,v in ipairs(_private[self]) do
+    if plain then return CList.find(self, value) end
+    for i,v in ipairs(self:toTable()) do
         if string.find(v, value) then return i end
     end
     return nil
 end
 
 function CStringList:findAll(value, plain)
-    if plain then retrun CList.findAll(self, value) end
+    if plain then return CList.findAll(self, value) end
     local result = {}
-    for i, v in ipairs(_private[self]) do
+    for i, v in ipairs(self:toTable()) do
         if string.find(v, value) then table.insert(result, i) end
     end
     return unpack(result)
