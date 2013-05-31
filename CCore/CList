@@ -13,13 +13,6 @@ function CList:toTable()
     return _private[self]
 end
 
-function CList:concat(sep, i, j)
-    sep = sep or ""
-    i = i or 1
-    j = j or #_private[self]
-    return table.concat(_private[self], sep, i, j)
-end
-
 function CList:insert(pos, value)
     if value == nil then
         value = pos
@@ -28,8 +21,23 @@ function CList:insert(pos, value)
     return table.insert(_private[self], pos, value)
 end
 
+function CList:at(pos)
+    return _private[self][pos]
+end
+
 function CList:maxn()
     return table.maxn(_private[self])
+end
+
+function CList:length()
+    return #_private[self]
+end
+
+function CList:find(val)
+    for i,v in ipairs(_private[self]) do
+        if v == val then return i end
+    end
+    return nil
 end
 
 function CList:remove(pos)
@@ -43,4 +51,8 @@ end
 
 function CList:dump()
     for i, v in ipairs(_private[self]) do print("[", i, "] = ", v) end
+end
+
+function CList:unpack()
+    return unpack(_private[self])
 end

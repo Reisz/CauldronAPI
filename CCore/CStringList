@@ -1,0 +1,29 @@
+CStringList = class("CStringList", CList)
+
+function CStringList:initialize(...)
+    local list = {...}
+    for i, v in ipairs(list) do
+        list[i] = tostring(v)
+    end
+    CList.initialize(self, unpack(list))
+end
+
+function CStringList.static.fromList(list)
+    assert(instanceOf(CList, list), "List not instance of CList")
+    return CStringList(list:unpack())
+end
+
+function CStringList:concat(sep, i, j)
+    sep = sep or ""
+    i = i or 1
+    j = j or self:length()
+    return table.concat(self:toTable(), sep, i, j)
+end
+
+function CStringList:insert(pos, value)
+    if value == nil then
+        value = pos
+        pos = #_private[self] + 1
+    end
+    return CList.insert(self, pos, tostring(value))
+end
