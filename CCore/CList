@@ -33,17 +33,17 @@ function CList:length()
     return #_private[self]
 end
 
-function CList:find(val)
+function CList:find(value)
     for i,v in ipairs(_private[self]) do
-        if v == val then return i end
+        if v == value then return i end
     end
     return nil
 end
 
-function CList:findAll(val)
+function CList:findAll(value)
     local result = {}
     for i, v in ipairs(_private[self]) do
-        if v == val then table.insert(result, i) end
+        if v == value then table.insert(result, i) end
     end
     return unpack(result)
 end

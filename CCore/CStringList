@@ -27,3 +27,20 @@ function CStringList:insert(pos, value)
     end
     return CList.insert(self, pos, tostring(value))
 end
+
+function CStringList:find(value, plain)
+    if plain then retrun CList.find(self, value) end
+    for i,v in ipairs(_private[self]) do
+        if string.find(v, value) then return i end
+    end
+    return nil
+end
+
+function CStringList:findAll(value, plain)
+    if plain then retrun CList.findAll(self, value) end
+    local result = {}
+    for i, v in ipairs(_private[self]) do
+        if string.find(v, value) then table.insert(result, i) end
+    end
+    return unpack(result)
+end
