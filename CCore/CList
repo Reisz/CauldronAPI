@@ -40,6 +40,14 @@ function CList:find(val)
     return nil
 end
 
+function CList:findAll(val)
+    local result = {}
+    for i, v in ipairs(_private[self]) do
+        if v == val then table.insert(result, i) end
+    end
+    return unpack(result)
+end
+
 function CList:remove(pos)
     pos = pos or #_private[self]
     return table.remove(_private[self], pos)
