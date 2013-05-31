@@ -53,6 +53,14 @@ function CList:remove(pos)
     return table.remove(_private[self], pos)
 end
 
+function CList:removeAll(...)
+    local result = {}
+    for _, v in ipairs({...}) do 
+        table.insert(result, self:remove(v))
+    end
+    return unpack(result)
+end
+
 function CList:sort(comp)
     return table.sort(_private[self], comp)
 end
