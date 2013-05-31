@@ -18,7 +18,7 @@ function CList:insert(pos, value)
         value = pos
         pos = #_private[self] + 1
     end
-    return table.insert(_private[self], pos, value)
+    table.insert(_private[self], pos, value)
 end
 
 function CList:at(pos)
