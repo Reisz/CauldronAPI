@@ -36,21 +36,21 @@ end
 function CStringList:concat(sep, i, j)
     sep = sep or ""
     i = i or 1
-    j = j or self:length()
-    return table.concat(self:toTable(), sep, i, j)
+    j = j or #self
+    return table.concat(self, sep, i, j)
 end
 
 function CStringList:insert(pos, value)
     if value == nil then
         value = pos
-        pos = self:length() + 1
+        pos = #self + 1
     end
     CList.insert(self, pos, tostring(value))
 end
 
 function CStringList:find(value, plain)
     if plain then return CList.find(self, value) end
-    for i,v in ipairs(self:toTable()) do
+    for i,v in ipairs(self) do
         if string.find(v, value) then return i end
     end
     return nil
@@ -59,7 +59,7 @@ end
 function CStringList:findAll(value, plain)
     if plain then return CList.findAll(self, value) end
     local result = {}
-    for i, v in ipairs(self:toTable()) do
+    for i, v in ipairs(self) do
         if string.find(v, value) then table.insert(result, i) end
     end
     return unpack(result)
