@@ -13,26 +13,6 @@ function CStringList.static.fromList(list)
     return CStringList(list:unpack())
 end
 
-function CStringList.static.splitString(input, split, plain, ignoreEmpty)
-    local result, i = {}, 1
-
-    while true do
-        local newI = string.find(input, split, i, plain)
-        if not newI then
-            local sub = string.sub(input, i)
-            if not (ignoreEmpty and #sub == 0) then
-                table.insert(result, sub)
-            end
-            return CStringList(unpack(result))
-        end
-        local sub = string.sub(input, i, newI - 1)
-        if not (ignoreEmpty and #sub == 0) then
-            table.insert(result, sub)
-        end
-        i = newI + 1
-    end
-end
-
 function CStringList:concat(sep, i, j)
     sep = sep or ""
     i = i or 1
