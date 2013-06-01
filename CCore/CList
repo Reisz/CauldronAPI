@@ -1,5 +1,4 @@
 CList = class("CList")
-local _private = setmetatable({}, {__mode = "k"})
 
 local function _newindex_fun(tbl, key, val)
         if type(key) == "number" then
