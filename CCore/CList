@@ -1,40 +1,50 @@
 CList = class("CList")
 local _private = setmetatable({}, {__mode = "k"})
 
+local function _newindex_fun(tbl, key, val)
+        if type(key) == "number" then
+            tbl[key] = val
+        end
+end
+
 function CList:initialize(...)
-    _private[self] = {...}
+    for i, v in ipairs({...}) do
+        table.insert(self, i, v)
+    end
+    
+    getmetatable(self).__newindex = _newindex_fun
 end
 
-function CList:copy(other)
-    return CList(unpack(_private[self]))
+function CList.static.fromTable(tbl)
+    return CList(unpack(tbl))
 end
 
-function CList:toTable()
-    return _private[self]
+function CList:copy()
+    return CList(unpack(self))
 end
 
 function CList:insert(pos, value)
     if value == nil then
         value = pos
-        pos = #_private[self] + 1
+        pos = #self + 1
     end
-    table.insert(_private[self], pos, value)
+    table.insert(self, pos, value)
 end
 
 function CList:at(pos)
-    return _private[self][pos]
+    return self[pos]
 end
 
 function CList:maxn()
-    return table.maxn(_private[self])
+    return table.maxn(self)
 end
 
 function CList:length()
-    return #_private[self]
+    return #self
 end
 
 function CList:find(value)
-    for i,v in ipairs(_private[self]) do
+    for i,v in ipairs(self) do
         if v == value then return i end
     end
     return nil
@@ -42,15 +52,15 @@ end
 
 function CList:findAll(value)
     local result = {}
-    for i, v in ipairs(_private[self]) do
+    for i, v in ipairs(self) do
         if v == value then table.insert(result, i) end
     end
     return unpack(result)
 end
 
 function CList:remove(pos)
-    pos = pos or #_private[self]
-    return table.remove(_private[self], pos)
+    pos = pos or #self
+    return table.remove(self, pos)
 end
 
 function CList:removeAll(...)
@@ -64,13 +74,13 @@ function CList:removeAll(...)
 end
 
 function CList:sort(comp)
-    table.sort(_private[self], comp)
+    table.sort(self, comp)
 end
 
 function CList:dump()
-    for i, v in ipairs(_private[self]) do print("[", i, "] = ", v) end
+    for i, v in ipairs(self) do print("[", i, "] = ", v) end
 end
 
 function CList:unpack()
-    return unpack(_private[self])
+    return unpack(self)
 end
