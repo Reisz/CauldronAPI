@@ -130,8 +130,25 @@ function CList:sort(comp)
     table.sort(self, comp)
 end
 
-function CList:dump()
-    for i, v in ipairs(self) do print("[", i, "] = ", v) end
+function CList:__tostring()
+    print("CList[", #self, "]: {",CStringList(self:unpack()):concat(", "), "}")
+end
+
+local function _dump_table(tbl)
+    return "{",CStringList(unpack(tbl)):concat(", "), "}"
+end
+
+local function _dump_to_string(value)
+    if type(value) == "string" then return string.format("%q", value) end
+    if type(value) == "table" then
+        return tostring(value), ": ", _dump_table(value)
+    end
+    return tostring(value)
+end
+
+function CList:__dump()
+    print("CList[", #self, "]")
+    for i, v in ipairs(self) do print("[", i, "] = ", _dump_to_string(v)) end
 end
 
 function CList:unpack()
