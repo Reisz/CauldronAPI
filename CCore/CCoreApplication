@@ -14,20 +14,13 @@ function CCoreApplication:initialize(...)
 	_applicationVersion = "" _organizationName = "" _organizationDomain = ""
 end
 
-function CCoreApplication.static.applicationName() return _applicationName end
-function CCoreApplication.static.setApplicationName(name) _applicationName = name end
-		
-function CCoreApplication.static.applicationVersion() return _applicationVersion end
-function CCoreApplication.static.setApplicationVersion(version) _applicationVersion = version end
-		
-function CCoreApplication.static.organizationName() return _organizationName end
-function CCoreApplication.static.setOrganizationName(name) _organizationName = name end
-
-function CCoreApplication.static.organizationDomain() return _organizationDomain end
-function CCoreApplication.static.setOrganizationDomain(domain) _organizationDomain = domain end
-
 function CCoreApplication.static.applicationDirPath() return _applicationDirPath end
+
 function CCoreApplication.static.applicationFilePath() return _applicationFilePath end
+
+function CCoreApplication.static.applicationName() return _applicationName end
+
+function CCoreApplication.static.applicationVersion() return _applicationVersion end
 
 function CCoreApplication.static.arguments()
     local tbl = {} -- don't give the real pointer away
@@ -36,6 +29,18 @@ function CCoreApplication.static.arguments()
     end
     
     return tbl
- end
- 
+end
+
 function CCoreApplication.static.instance() return _instance end
+
+function CCoreApplication.static.organizationDomain() return _organizationDomain end
+
+function CCoreApplication.static.organizationName() return _organizationName end
+
+function CCoreApplication.static.setApplicationName(name) _applicationName = name end
+
+function CCoreApplication.static.setApplicationVersion(version) _applicationVersion = version end
+
+function CCoreApplication.static.setOrganizationDomain(domain) _organizationDomain = domain end
+
+function CCoreApplication.static.setOrganizationName(name) _organizationName = name end

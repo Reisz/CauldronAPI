@@ -18,18 +18,6 @@ function CList.static.fromTable(tbl)
     return CList(unpack(tbl))
 end
 
-function CList:copy()
-    return CList(unpack(self))
-end
-
-function CList:insert(pos, value)
-    if value == nil then
-        value = pos
-        pos = #self + 1
-    end
-    table.insert(self, pos, value)
-end
-
 function CList:append(value)
     self:insert(value)
 end
@@ -38,26 +26,8 @@ function CList:at(pos)
     return self[pos]
 end
 
-function CList:value(pos, default)
-    local result = self[pos]
-    if result == nil then return default end
-    return result
-end
-
-function CList:first()
-    return self[1]
-end
-
-function CList:last()
-    return self[#self]
-end
-
-function CList:maxn()
-    return table.maxn(self)
-end
-
-function CList:length()
-    return #self
+function CList:clear()
+    while #self > 0 do self:remove() end
 end
 
 function CList:contains(value)
@@ -65,11 +35,8 @@ function CList:contains(value)
     return false
 end
 
-function CList:find(value)
-    for i,v in ipairs(self) do
-        if v == value then return i end
-    end
-    return nil
+function CList:copy()
+    return CList(unpack(self))
 end
 
 function CList:count(value)
@@ -81,8 +48,17 @@ function CList:count(value)
     return result
 end
 
-function CList:isEmpty()
-    return #self == 0
+function CList:endsWith(value)
+    local last = #self
+    if last == 0 then return false end
+    return self[last] == value
+end
+
+function CList:find(value)
+    for i,v in ipairs(self) do
+        if v == value then return i end
+    end
+    return nil
 end
 
 function CList:findAll(value)
@@ -93,10 +69,32 @@ function CList:findAll(value)
     return unpack(result)
 end
 
-function endsWith(value)
-    local last = #self
-    if last == 0 then return false end
-    return self[last] == value
+function CList:first()
+    return self[1]
+end
+
+function CList:insert(pos, value)
+    if value == nil then
+        value = pos
+        pos = #self + 1
+    end
+    table.insert(self, pos, value)
+end
+
+function CList:isEmpty()
+    return #self == 0
+end
+
+function CList:last()
+    return self[#self]
+end
+
+function CList:length()
+    return #self
+end
+
+function CList:maxn()
+    return table.maxn(self)
 end
 
 function CList:remove(pos)
@@ -122,12 +120,22 @@ function CList:removeLast()
     self:remove()
 end
 
-function CList:clear()
-    while #self > 0 do self:remove() end
-end
-
 function CList:sort(comp)
     table.sort(self, comp)
+end
+
+function CList:startsWith(value)
+    return self[1] == value
+end
+
+function CList:unpack()
+    return unpack(self)
+end
+
+function CList:value(pos, default)
+    local result = self[pos]
+    if result == nil then return default end
+    return result
 end
 
 function CList:__tostring()
@@ -149,8 +157,4 @@ end
 function CList:__dump()
     print("CList[", #self, "]")
     for i, v in ipairs(self) do print("[", i, "] = ", _dump_to_string(v)) end
-end
-
-function CList:unpack()
-    return unpack(self)
 end
