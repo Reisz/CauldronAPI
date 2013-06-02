@@ -16,46 +16,34 @@ function CObject:initialize(parent)
     
     _private[self] = {
         parent = parent,
-        children = {},
+        children = CList(),
         name = ""
     }
     
     if parent then
-        table.insert(_private[parent].children, self) -- backref from parent
+        _private[parent].children:insert(self) -- backref from parent
     end
 end
 
-function CObject:children()
-    local tbl = {} -- don't give the real pointer away
-    for i,v in pairs(_private[self].children) do
-        tbl[i] = v
-    end
-    
-    return tbl
-end
+function CObject:children() return _private[self].children:copy() end
 
-function CObject:objectName()
-    return _private[self].name
-end
+function CObject:objectName() return _private[self].name end
 
-function CObject:parent()
-    return _private[self].parent
-end
+function CObject:parent() return _private[self].parent end
 
-function CObject:setObjectName(name)
-    _private[self].name = name
-end
+function CObject:setObjectName(name) _private[self].name = name end
 
 function CObject:setParent(parent)
     assert(instanceOf(CObject, parent) or parent == nil, "parent must be CObject or nil")
     
     if _private[self].parent then
-        _tableRemove(_private[_private[self].parent].children, parent)
+        local pChildren = _private[_private[self].parent].children
+        pChildren:remove(pChildren:find(self))
     end
     
     _private[self].parent = parent
     
     if parent then
-        table.insert(_private[parent].children, self) -- backref from parent
+        _private[parent].children:insert(self) -- backref from parent
     end
 end
