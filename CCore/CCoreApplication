@@ -22,14 +22,7 @@ function CCoreApplication.static.applicationName() return _applicationName end
 
 function CCoreApplication.static.applicationVersion() return _applicationVersion end
 
-function CCoreApplication.static.arguments()
-    local tbl = {} -- don't give the real pointer away
-    for i,v in pairs(_arguments) do
-        tbl[i] = v
-    end
-    
-    return tbl
-end
+function CCoreApplication.static.arguments() return CStringList(unpack(_arguments)) end
 
 function CCoreApplication.static.instance() return _instance end
 
