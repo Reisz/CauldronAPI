@@ -18,26 +18,18 @@ function CList.static.fromTable(tbl)
     return CList(unpack(tbl))
 end
 
-function CList:append(value)
-    self:insert(value)
-end
+function CList:append(value) self:insert(value) end
 
-function CList:at(pos)
-    return self[pos]
-end
+function CList:at(pos) return self[pos] end
 
-function CList:clear()
-    while #self > 0 do self:remove() end
-end
+function CList:clear() while #self > 0 do self:remove() end end
 
 function CList:contains(value)
     if self:find(value) then return true end
     return false
 end
 
-function CList:copy()
-    return CList(unpack(self))
-end
+function CList:copy() return CList(unpack(self)) end
 
 function CList:count(value)
     if not value then return #self end
@@ -69,9 +61,7 @@ function CList:findAll(value)
     return unpack(result)
 end
 
-function CList:first()
-    return self[1]
-end
+function CList:first() return self[1] end
 
 function CList:insert(pos, value)
     if value == nil then
@@ -81,21 +71,13 @@ function CList:insert(pos, value)
     table.insert(self, pos, value)
 end
 
-function CList:isEmpty()
-    return #self == 0
-end
+function CList:isEmpty() return #self == 0 end
 
-function CList:last()
-    return self[#self]
-end
+function CList:last() return self[#self] end
 
-function CList:length()
-    return #self
-end
+function CList:length() return #self end
 
-function CList:maxn()
-    return table.maxn(self)
-end
+function CList:maxn() return table.maxn(self) end
 
 function CList:remove(pos)
     pos = pos or #self
@@ -112,25 +94,15 @@ function CList:removeAll(...)
     return unpack(result)
 end
 
-function CList:removeFirst()
-    self:remove(1)
-end
+function CList:removeFirst() self:remove(1) end
 
-function CList:removeLast()
-    self:remove()
-end
+function CList:removeLast() self:remove() end
 
-function CList:sort(comp)
-    table.sort(self, comp)
-end
+function CList:sort(comp) table.sort(self, comp) end
 
-function CList:startsWith(value)
-    return self[1] == value
-end
+function CList:startsWith(value) return self[1] == value end
 
-function CList:unpack()
-    return unpack(self)
-end
+function CList:unpack() return unpack(self) end
 
 function CList:value(pos, default)
     local result = self[pos]
