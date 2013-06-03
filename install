@@ -1,17 +1,20 @@
 local args = {...}
+
+if args[1] == "-h" or args[1] == "--help" then
+    print "Usage: install [OPTIONS]"
+    print "OPTIONS: -s <y/n> or --startup <yes/no>"
+    print "            Install startup script (Default: yes)"
+    print "         -d DIR or --direcoty DIR"
+    print "            Use DIR as target directory."
+    print "         --doc <y/n> / <yes/no>"
+    print "            Keep documentation comments (Default: yes)"
+    return
+end
+
 local version, vstring = -1, "PreAlpha"
 local thisProgram = shell.getRunningProgram()
 local source, dir = string.sub(thisProgram, 1, #thisProgram - #string.match(thisProgram, "/[^/]+$") + 1)
-local startup
-
-if args[1] == "-h" or args[1] == "--help" then
-    print("Usage: install [OPTIONS]")
-    print("OPTIONS: -s <y/n> or --startup <yes/no>")
-    print("            Install startup script (Default: yes)")
-    print("         -d DIR or --direcoty DIR")
-    print("            Use DIR as target directory.")
-    return
-end
+local startup, doc
 
 shell.setDir("")
 
@@ -29,13 +32,27 @@ while #args > 0 do
         if #input == 0 then input = "CLibs" end
         dir = shell.resolve(input)
         if input ~= dir or dir == "Cauldron" then dir = nil end
+    elseif args[1] == "--doc" then
+        table.remove(args, 1)
+        if args[1] == "n" or args[1] == "N" or args[1] == "no" then
+            doc = false
+        else
+            doc = true
+        end
     end
     table.remove(args, 1)
 end
 
 local function install(name)
-	if fs.exists(dir .. name) then fs.delete(dir .. name) end
-	fs.copy(source .. name, dir .. name)
+    local src = dir .. name
+	if fs.exists(src) then fs.delete(src) end
+    if fs.isDir(src) then
+        for _, v in fs.list(src) do
+            install(fs.combine(name, v))
+        end
+    else
+    
+    end
     write(".")
 end
 
@@ -99,7 +116,7 @@ if not string.find(dir, "/$") then dir = dir .. "/" end
 
 write("Cauldron")
     local fileC = fs.open("Cauldron", "w")
-    local fileM = fs.open(source .. "main", "r")
+    local fileM = fs.open(source .. "main.lua", "r")
 
     if not fileC or not fileM then
         write('\nFailed to open the file "Cauldron", setup will be aborted.\n')
@@ -112,7 +129,7 @@ write("Cauldron")
 write(" ok\n")
 
 write("Loader")
-	install("middleclass")
+	install("middleclass.lua")
     if startup then
         if fs.exists("startup") then fs.delete("startup") end
         fs.copy(source .. "start", "startup")
