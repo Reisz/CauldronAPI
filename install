@@ -125,7 +125,7 @@ write("Loader")
 	install("middleclass.lua")
     if startup then
         if fs.exists("startup") then fs.delete("startup") end
-        fs.copy(source .. "start", "startup")
+        fs.copy(source .. "start.lua", "startup")
         write(".")
     end
 write(" ok\n")
