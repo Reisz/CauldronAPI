@@ -3,7 +3,7 @@ local args = {...}
 if args[1] == "-h" or args[1] == "--help" then
     print("Usage: cdoc from [to]")
     print("from: Directory of the sources.")
-    print("to:   Directory for the documentation tool.")
+    print("to:   Directory for the documentation.")
     print("      Defaults to: doc")
     print("Both are realtive to the current directory.")
     return
@@ -11,18 +11,26 @@ end
 
 local from, to = shell.resolve(args[1]), shell.resolve(args[2] or "doc")
 
+if not fs.exists(to) then
+    fs.makeDir(to)
+else
+    print("Cleaning up target...")
+    for _, v in ipairs(fs.list(to)) do
+        fs.delete(fs.combine(to, v))
+    end
+end
+
+
 print("Scanning files...")
-if not fs.exists(to) then fs.makeDir(to) end
 local doc = fs.open(fs.combine(to, "_doc"), "w")
 
 local function _scan_dir(dir)
     for _, v in ipairs(fs.list(dir)) do
-        v = fs.combine(dir, v); print(v)
+        v = fs.combine(dir, v); print("  ", v)
         if fs.isDir(v) then
             _scan_dir(v)
         else
             local file = fs.open(v, "r")
-            doc.writeLine("~" .. v)
             if not file then print("Error opening " .. string.format("%q", v)) end
             file.readAll():gsub("\n--!([^~][^\n]*\n)", doc.write)
             file.close()
@@ -32,3 +40,94 @@ end
 
 _scan_dir(from)
 doc.close()
+
+local function split(s, split)
+    local result, current = {}, {}
+    local bytes = {s:byte(1, #s)}
+
+    for _, v in ipairs(bytes) do
+        if v == split then
+            local new = string.char(unpack(current))
+            if #new > 0 then table.insert(result, new) end
+            current = {}
+        else
+            table.insert(current, v)
+        end
+    end
+
+    local new = string.char(unpack(current))
+    if #new > 0 then table.insert(result, new) end
+
+    return result
+end
+
+
+print("Indexing input...")
+doc = fs.open(fs.combine(to, "_doc"), "r")
+
+local currentModule, currentClass, currentMember
+local index, modules, default = {}, {}, function() end
+modules[default] = {}
+
+local function parse(line, nr)
+    if not line then return end
+    local res
+    res = line:match("^!module%s*(.*)$")
+    if res then
+        currentModule = modules[res]
+        if not currentModule then
+            modules[res] = {}
+            currentModule = modules[res]
+        end
+        currentClass = nil
+        return parse(--[[parseClass(]]doc.readLine(), nr + 1)--)
+    end
+    res = line:match("^!class%s+(.+)$")
+    if res then
+        local anchor = res:match("@(%w+)$")
+        currentClass = {}
+        -- anchor
+        if anchor then
+            index[anchor] = class
+            res = res:sub(1, -#anchor - 3)
+        end
+        -- class name
+        local parts = split(res, string.byte(" "))
+        currentModule[parts[1]] = currentClass
+        print("  class ", parts[1])
+        table.remove(parts, 1)
+        -- super class
+        if parts[1] == "extends" then
+            table.remove(parts, 1)
+            currentClass.super = parts[1]
+            table.remove(parts, 1)
+        end
+        -- mixin support
+        return parse(doc.readLine(), nr + 1)
+    end
+    res = line:match("^!member%s+(.+)$")
+    if res then
+        -- parse member
+        return parse(doc.readLine(), nr + 1)
+    end
+    print("! Error:Invalid line:", nr, ": ", string.sub(line, 1, 20), #line > 20 and "~" or "")
+    return parse(doc.readLine(), nr + 1)
+end
+
+parse(doc.readLine(), 1)
+doc.close()
+
+print()
+local function printTable(tbl, prefix)
+    prefix = prefix or ""
+    for i,v in pairs(tbl) do
+        if type(v) == "table" then
+            print(prefix, "[", i, "] = ", tostring(v))
+            printTable(v, prefix .. "  ")
+        else
+            print(prefix, "[", i, "] = ", tostring(v))
+        end
+    end
+end
+
+printTable(modules)
