@@ -52,5 +52,5 @@ function Cauldron.loadModule(name)
 end
 
 -- API is useless without them
-_load("middleclass")
+_load("middleclass.lua")
 Cauldron.loadModule("CCore")

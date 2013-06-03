@@ -13,7 +13,7 @@ end
 
 local version, vstring = -1, "PreAlpha"
 local thisProgram = shell.getRunningProgram()
-local source, dir = string.sub(thisProgram, 1, #thisProgram - #string.match(thisProgram, "/[^/]+$") + 1)
+local source, dir = string.sub(thisProgram, 1, #thisProgram - #string.match(thisProgram, "/[^/]+$") + 1) .. "src/"
 local startup, doc
 
 shell.setDir("")
@@ -44,16 +44,9 @@ while #args > 0 do
 end
 
 local function install(name)
-    local src = dir .. name
-	if fs.exists(src) then fs.delete(src) end
-    if fs.isDir(src) then
-        for _, v in fs.list(src) do
-            install(fs.combine(name, v))
-        end
-    else
-    
-    end
-    write(".")
+    from, to = source .. name, dir .. name
+	if fs.exists(to) then fs.delete(to) end
+    fs.copy(from, to)
 end
 
 local function advancedInput(message, default)
