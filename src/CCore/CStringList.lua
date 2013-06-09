@@ -1,10 +1,9 @@
---!!module CCore
---!!class CStringList extends CList @CStringList
+--!!class CStringList extends CList module CCore @CStringList
 --!The CStringList class provides a list of strings.
 --!$see CString
 CStringList = class("CStringList", CList)
 
---!!member function nil CStringList(string ...) @CStringList()
+--!!value function CStringList class CStringList @CStringList()
 function CStringList:initialize(...)
     local list = {...}
     for i, v in ipairs(list) do
@@ -13,14 +12,14 @@ function CStringList:initialize(...)
     CList.initialize(self, unpack(list))
 end
 
---!!member function CStringList.fromList(CList list) @CStringList.fromList
+--!!value function fromList class CStringList @CStringList.fromList
 --!$static
 function CStringList.static.fromList(list)
     assert(instanceOf(CList, list), "List not instance of CList")
     return CStringList(list:unpack())
 end
 
---!!member function string CStringList:concat(string separator, int i, int j) @CStringList:concat
+--!!value function concat class CStringList @CStringList:concat
 function CStringList:concat(sep, i, j)
     sep = sep or ""
     i = i or 1
@@ -28,7 +27,7 @@ function CStringList:concat(sep, i, j)
     return table.concat(self, sep, i, j)
 end
 
---!!member function int CStringList:find(string value, bool plain) @CStringList:find
+--!!value function find class CStringList @CStringList:find
 function CStringList:find(value, plain)
     if plain then return CList.find(self, value) end
     for i,v in ipairs(self) do
@@ -37,7 +36,7 @@ function CStringList:find(value, plain)
     return nil
 end
 
---!!member function int, ... CStringList:findAll(string value, bool plain) @CStringList:findAll
+--!!value function findAll class CStringList @CStringList:findAll
 function CStringList:findAll(value, plain)
     if plain then return CList.findAll(self, value) end
     local result = {}
@@ -47,7 +46,7 @@ function CStringList:findAll(value, plain)
     return unpack(result)
 end
 
---!!member function nil CStringList:insert(int pos, string value) @CStringList:insert
+--!!value function insert class CStringList @CStringList:insert
 function CStringList:insert(pos, value)
     if value == nil then
         value = pos
