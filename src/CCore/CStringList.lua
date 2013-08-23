@@ -3,7 +3,7 @@
 --!$see CString
 CStringList = class("CStringList", CList)
 
---!!value function CStringList class CStringList @CStringList()
+--!!value function CStringList class CStringList @CStringList.initialize
 function CStringList:initialize(...)
     local list = {...}
     for i, v in ipairs(list) do
@@ -19,7 +19,7 @@ function CStringList.static.fromList(list)
     return CStringList(list:unpack())
 end
 
---!!value function concat class CStringList @CStringList:concat
+--!!value function concat class CStringList @CStringList.concat
 function CStringList:concat(sep, i, j)
     sep = sep or ""
     i = i or 1
@@ -27,7 +27,7 @@ function CStringList:concat(sep, i, j)
     return table.concat(self, sep, i, j)
 end
 
---!!value function find class CStringList @CStringList:find
+--!!value function find class CStringList @CStringList.find
 function CStringList:find(value, plain)
     if plain then return CList.find(self, value) end
     for i,v in ipairs(self) do
@@ -36,7 +36,7 @@ function CStringList:find(value, plain)
     return nil
 end
 
---!!value function findAll class CStringList @CStringList:findAll
+--!!value function findAll class CStringList @CStringList.findAll
 function CStringList:findAll(value, plain)
     if plain then return CList.findAll(self, value) end
     local result = {}
@@ -46,7 +46,7 @@ function CStringList:findAll(value, plain)
     return unpack(result)
 end
 
---!!value function insert class CStringList @CStringList:insert
+--!!value function insert class CStringList @CStringList.insert
 function CStringList:insert(pos, value)
     if value == nil then
         value = pos

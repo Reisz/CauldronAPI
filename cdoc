@@ -81,7 +81,7 @@ doc.close()
 print("Indexing input...")
 doc = fs.open(fs.combine(to, "_doc"), "r")
 
-local current
+local current = {}
 local classes, values = {}, {}
 local index, modules, default = {}, {}, {}
 modules[default] = {}
@@ -126,7 +126,7 @@ local function parseClassDef(line)
         table.remove(parts, 1)
     end
     
-    -- mixin support
+    -- mixin support TODO
     
     -- module
     if parts[1] == "module" then
@@ -164,7 +164,7 @@ local function parse(line, nr)
     -- class
     res = line:match("^!class%s+(.+)$")
     if res then
-        current = {properties = {}, values = {}}
+        current = {properties = {}, values = {}, subclasses = {}}
         res = parseAnchor(res, current)
         parseClassDef(res)
         return parse(doc.readLine(), nr + 1)
@@ -193,7 +193,7 @@ local function parse(line, nr)
     return parse(doc.readLine(), nr + 1)
 end
 
-parse(doc.readLine(), 1)
+local success, value = pcall(parse, doc.readLine(), 1)
 doc.close()
 
 -- assign values
@@ -212,6 +212,9 @@ values = nil
 for i, v in pairs(classes) do
     if v.super then
         if not index[v.super] then print("! Could not find class ", v.super)
-        else v.superRef = index[v.super] end
+        else
+            v.superRef = index[v.super]
+            index[v.super].subclasses[i] = v
+        end
     end
 end

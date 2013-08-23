@@ -1,3 +1,4 @@
+--!!class CList module CCore @CList
 CList = class("CList")
 
 local function _newindex_fun(tbl, key, val)
