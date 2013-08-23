@@ -54,3 +54,6 @@ end
 -- API is useless without them
 _load("middleclass.lua")
 Cauldron.loadModule("CCore")
+
+-- Register apps
+

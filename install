@@ -119,10 +119,10 @@ write("Cauldron")
     fileC.write(string.format(fileM.readAll(), version, vstring, dir))
     fileC.close()
     fileM.close()
-write(" ok\n")
+write(". ok\n")
 
 write("Loader")
-	install("middleclass.lua")
+	install("middleclass.lua"); write(".")
     if startup then
         if fs.exists("startup") then fs.delete("startup") end
         fs.copy(source .. "start.lua", "startup")
@@ -131,7 +131,17 @@ write("Loader")
 write(" ok\n")
 
 write("Modules")
-    install("CCore")
+    install("CCore"); write(".")
+write(" ok\n")
+
+write("Applications")
+    install("CApps");
+    local fileC = fs.open("Cauldron", "a")
+    for _, v in ipairs(fs.list(dir .. "CApps")) do
+        fileC.writeLine('shell.setAlias("' .. v .. '", "/' .. dir .. 'CApps/' .. v .. '/main.lua")')
+        write(".")
+    end
+    fileC.close()
 write(" ok\n")
 
 write("\nFinished installation!\n")
