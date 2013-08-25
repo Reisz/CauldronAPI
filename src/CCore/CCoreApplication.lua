@@ -7,7 +7,7 @@ local _applicationFilePath, _applicationDirPath
 function CCoreApplication:initialize(...)
     _arguments = {...}
     _instance = self
-    _applicationFilePath = shell.getRunningProgram()
+    _applicationFilePath = "/" .. shell.getRunningProgram()
 	_applicationName = string.match(_applicationFilePath, "[^/]+$")
     if not _applicationName then _applicationName = _applicationFilePath end
     _applicationDirPath = string.sub(_applicationFilePath, 1, #_applicationFilePath - #_applicationName)
