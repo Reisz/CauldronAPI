@@ -112,7 +112,7 @@ function CList:value(pos, default)
 end
 
 function CList:__tostring()
-    print("CList[", #self, "]: {",CStringList(self:unpack()):concat(", "), "}")
+    return "CList[" .. #self .. "]: {" .. CStringList(self:unpack()):concat(", ") .. "}"
 end
 
 local function _dump_table(tbl)
