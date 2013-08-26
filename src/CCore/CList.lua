@@ -103,6 +103,16 @@ function CList:sort(comp) table.sort(self, comp) end
 
 function CList:startsWith(value) return self[1] == value end
 
+function CList:takeAt(pos)
+    local v = self[pos]
+    self:remove(i)
+    return v
+end
+
+function CList:takeFirst() return self:takeAt(1) end
+
+function CList:takeLast() return self:takeAt(#self) end 
+
 function CList:unpack() return unpack(self) end
 
 function CList:value(pos, default)
