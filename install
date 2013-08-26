@@ -29,7 +29,7 @@ while #args > 0 do
     elseif args[1] == "-d" or args[1] == "--directory" then
         table.remove(args, 1)
         local input = args[1]
-        if #input == 0 then input = "CLibs" end
+        if #input == 0 then input = "/CLibs" end
         dir = shell.resolve(input)
         if input ~= dir or dir == "Cauldron" then dir = nil end
     elseif args[1] == "--doc" then
@@ -41,7 +41,7 @@ while #args > 0 do
         end
     end
     table.remove(args, 1)
-end
+end 
 
 local function install(name)
     from, to = source .. name, dir .. name
@@ -105,6 +105,7 @@ end
 
 write("Starting setup...\n\n")
 fs.makeDir(dir)
+if not string.find(dir, "^/") then dir = "/" .. dir end
 if not string.find(dir, "/$") then dir = dir .. "/" end
 
 write("Cauldron")
