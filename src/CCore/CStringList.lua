@@ -54,3 +54,7 @@ function CStringList:insert(pos, value)
     end
     CList.insert(self, pos, tostring(value))
 end
+
+function CStringList:__tostring()
+    return "CStringList[" .. #self .. "]: {" .. self:concat(", ") .. "}"
+end
