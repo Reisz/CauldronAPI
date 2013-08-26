@@ -1,16 +1,6 @@
 CObject = class("CObject")
 local _private = setmetatable({}, {__mode = "k"})
 
-local _tableFind = function(tbl, value)
-    for i, v in pairs(tbl) do
-        if v == value then return i end
-    end
-end
-
-local _tableRemove = function(tbl, value)
-    table.remove(tbl, _tableFind(tbl, value))
-end
-
 function CObject:initialize(parent)
     assert(instanceOf(CObject, parent) or parent == nil, "parent must be CObject or nil")
     
