@@ -124,6 +124,7 @@ write(". ok\n")
 
 write("Loader")
 	install("middleclass.lua"); write(".")
+	install("CEnum.lua"); write(".")
     if startup then
         if fs.exists("startup") then fs.delete("startup") end
         fs.copy(source .. "start.lua", "startup")

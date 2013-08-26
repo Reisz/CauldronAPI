@@ -9,27 +9,9 @@ Cauldron = setmetatable({}, {
 -- Dynamic stuff
 function Cauldron.version() return %i end
 function Cauldron.versionString() return %q end
-function Cauldron.libDirectory(sub) return %q .. sub end
-
--- Enums
-local enums = {}
-local enumKeys = {}
-
-local function _add_enum(name, enum)
-    enums[name] = enum
-    for i,v in pairs(enum) do
-        if enumKeys[i] then print("Warning: Overwirting enum ", string.fromat("%%q", i), ": ", enumKeys[i], " -> ", v) end
-        enumKeys[i] = v
-    end
-end
-
-_add_enum("ConnectionType", {AutoConnection = 0, DirectConnection = 1, QueuedConnection = 2, BlockingQueuedConnection = 3, UniqueConnection = 128})
+function Cauldron.libraryPath(sub) return %q .. sub end
                
 -- Loading helpers
-local function _load(name)
-    shell.run(Cauldron.libDirectory(name))
-end
-
 local function _scan(dir)
     dir = dir .. "/"
     local files = fs.list(dir)
@@ -47,12 +29,13 @@ Cauldron._loaded = {}
 -- Actual load function
 function Cauldron.loadModule(name)
     if Cauldron._loaded[name] then return end
-    _scan(Cauldron.libDirectory("") .. name)
+    _scan(Cauldron.libraryPath(name))
     Cauldron._loaded[name] = true
 end
 
--- API is useless without them
-_load("middleclass.lua")
+-- API basics
+shell.run(Cauldron.libraryPath("middleclass.lua"))
+shell.run(Cauldron.libraryPath("CEnum.lua"))
 Cauldron.loadModule("CCore")
 
 -- Register apps
