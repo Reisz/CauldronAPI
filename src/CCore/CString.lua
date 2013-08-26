@@ -1,3 +1,5 @@
+CString = {}
+
 local function _find_next_arg_index(s, from)
     while from <= 99 do
         if s:find("%%" .. from) then return from end
@@ -25,26 +27,23 @@ local function _assign_args(s, args)
     return result
 end
 
-function string:arg(...)
-    return self:gsub("(%%%d%d?)", _assign_args(self, {...}))
+function CString.arg(s, ...)
+    return s:gsub("(%%%d%d?)", _assign_args(s, {...}))
 end
 
-function string:split(split, plain, ignoreEmpty)
-    local result, i = {}, 1
+function CString.split(s, split, plain, ignoreEmpty)
+    local result, i = CStringList(), 1
 
     while true do
-        local newI = string.find(self, split, i, plain)
+        local newI = string.find(s, split, i, plain)
         if not newI then
-            local sub = string.sub(self, i)
-            if not (ignoreEmpty and #sub == 0) then
-                table.insert(result, sub)
-            end
-            return CStringList(unpack(result))
+            local sub = string.sub(s, i)
+            if not (ignoreEmpty and #sub == 0) then result:append(sub) end
+            return result
+        else
+            local sub = string.sub(s, i, newI - 1)
+            if not (ignoreEmpty and #sub == 0) then result:append(sub) end
+            i = newI + 1
         end
-        local sub = string.sub(self, i, newI - 1)
-        if not (ignoreEmpty and #sub == 0) then
-            table.insert(result, sub)
-        end
-        i = newI + 1
     end
 end
