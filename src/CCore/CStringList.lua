@@ -4,12 +4,9 @@
 CStringList = class("CStringList", CList)
 
 --!!value function CStringList class CStringList @CStringList.initialize
-function CStringList:initialize(...)
-    local list = {...}
-    for i, v in ipairs(list) do
-        list[i] = tostring(v)
-    end
-    CList.initialize(self, unpack(list))
+function CStringList:initialize(list)
+    if list then for i, v in ipairs(list) do self[i] = tostring(v) end end
+    CList.initialize(self)
 end
 
 --!!value function fromList class CStringList @CStringList.fromList

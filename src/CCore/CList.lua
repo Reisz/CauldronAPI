@@ -7,11 +7,8 @@ local function _newindex_fun(tbl, key, val)
         end
 end
 
-function CList:initialize(...)
-    for i, v in ipairs({...}) do
-        table.insert(self, i, v)
-    end
-    
+function CList:initialize(list)
+    if list then for i, v in ipairs(list) do self[i] = v end end
     getmetatable(self).__newindex = _newindex_fun
 end
 
@@ -122,11 +119,11 @@ function CList:value(pos, default)
 end
 
 function CList:__tostring()
-    return "CList[" .. #self .. "]: {" .. CStringList(self:unpack()):concat(", ") .. "}"
+    return "CList[" .. #self .. "]: {" .. CStringList(self):concat(", ") .. "}"
 end
 
 local function _dump_table(tbl)
-    return "{",CStringList(unpack(tbl)):concat(", "), "}"
+    return "{", CStringList(tbl):concat(", "), "}"
 end
 
 local function _dump_to_string(value)
