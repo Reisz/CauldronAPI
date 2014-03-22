@@ -1,1 +1,2 @@
-shell.run("src/install.lua", unpack({...}))
+local thisProgram = shell.getRunningProgram()
+shell.run(string.sub(thisProgram, 1, #thisProgram - #string.match(thisProgram, "/[^/]+$") + 1) .. "/src/install.lua", unpack({...}))
